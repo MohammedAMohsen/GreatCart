@@ -71,10 +71,10 @@
             </div>  <!-- category-wrap.// -->
         </div> <!-- col.// -->
         <div class="col-lg  col-md-6 col-sm-12 col">
-            <form action="{% url 'store' %}" method="GET" class="search">
+            <form action="{% url 'search' %}" method="GET" class="search">
                 <div class="input-group w-100">
                     <a href="{% url 'store' %}" class="btn btn-outline-primary">Store</a>
-                    <input type="text" name="q" class="form-control" style="width:60%; margin-left:10px; border-radius: 8px 0 0 8px;" placeholder="Search">
+                    <input type="text" name="q" class="form-control" value="{{ request.GET.q }}" style="width:60%; margin-left:10px; border-radius: 8px 0 0 8px;" placeholder="Search">
                     <div class="input-group-append">
                         <button class="btn btn-primary" type="submit">
                             <i class="fa fa-search"></i>

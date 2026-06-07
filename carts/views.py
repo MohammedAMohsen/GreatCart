@@ -1,6 +1,8 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from .models import Cart, CartItem
 from store.models import Product
+from django.contrib import messages
+from django.core.exceptions import ObjectDoesNotExist
 
 
 def _cart_id(request):
@@ -11,29 +13,30 @@ def _cart_id(request):
 
 
 def add_cart(request, product_id):
-    try:
-        cart = Cart.objects.get(cart_id=_cart_id(request)) # get the cart useing the cart_id present in the session
-    except Cart.DoesNotExist:
-        cart = Cart.objects.create(cart_id=_cart_id(request))
-    cart.save()
-
     product = Product.objects.get(id=product_id) # get the product
-
-    try:
-        cart_item = CartItem.objects.get(product=product, cart=cart)
-        cart_item.quantity += 1
-        cart_item.save()
-    except CartItem.DoesNotExist:
-        cart_item = CartItem.objects.create(product=product, cart=cart, quantity=1)
-        cart_item.save()
-
-    return redirect('cart')
+    if product.is_available and product.stock > 0:
+        try:
+            cart = Cart.objects.get(cart_id=_cart_id(request)) # get the cart useing the cart_id present in the session
+        except Cart.DoesNotExist:
+            cart = Cart.objects.create(cart_id=_cart_id(request))
+        cart.save()
+        try:
+            cart_item = CartItem.objects.get(product=product, cart=cart)
+            cart_item.quantity += 1
+            cart_item.save()
+        except CartItem.DoesNotExist:
+            cart_item = CartItem.objects.create(product=product, cart=cart, quantity=1)
+            cart_item.save()
+        return redirect('cart')
+    else:
+        messages.warning(request, 'The product is not available at the moment, try later')
+        return redirect('product-detail', category_slug=product.category.slug ,product_slug=product.slug)
 
 
 def remove_cart(request, product_id):
     product = get_object_or_404(Product, id=product_id)
     cart = Cart.objects.get(cart_id=_cart_id(request))
-    cart_item = CartItem.objects.get(cart=cart, product=product)
+    cart_item = get_object_or_404(CartItem, cart=cart, product=product)
     if cart_item.quantity > 1:
         cart_item.quantity -= 1
         cart_item.save()  
@@ -45,7 +48,7 @@ def remove_cart(request, product_id):
 def delete_cart(request, product_id):
     product = get_object_or_404(Product, id=product_id)
     cart = Cart.objects.get(cart_id=_cart_id(request))
-    cart_item = CartItem.objects.get(cart=cart, product=product)
+    cart_item = get_object_or_404(CartItem, cart=cart, product=product)
     cart_item.delete()
     return redirect('cart')
 
@@ -58,7 +61,7 @@ def cart(request, total=0, tax=0, grand_total=0, cart_items=None):
             total += (cart_item.product.price * cart_item.quantity)
         tax = (2 * total) / 100  # 2% قيمة الضريبة 
         grand_total = total + tax
-    except:
+    except ObjectDoesNotExist:
         pass
 
     context = {

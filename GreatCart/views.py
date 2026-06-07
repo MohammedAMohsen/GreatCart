@@ -4,7 +4,7 @@ from django.http import Http404
 
 
 def home(request):
-    products = Product.objects.all().filter(is_available=True)
+    products = Product.objects.all()[:8]
     context = {
         'products': products,
     }
