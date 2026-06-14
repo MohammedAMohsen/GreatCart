@@ -1,0 +1,43 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+
+<section class="section-conten padding-y mr-3 ml-3" style="min-height:55vh">
+	<!-- ============================ COMPONENT LOGIN   ================================= -->
+
+	{% if request.GET.command == 'verification' %}
+		<div class="container mx-auto alert alert-info text-center" style="max-width: 680px; font-size:17px; padding:25px" role="alert">
+			Your account has been created!, We have sent you a verification email to your email address '{{request.GET.email}}', Please verify it.
+			<br><br>
+			Already verified? <a href="{% url 'login' %}">Login</a>
+		</div>
+	{% else %}
+
+		<div class="card mx-auto" style="max-width: 380px;">
+			<div class="card-body">
+				<h4 class="card-title mb-4">Sign in</h4>
+				<form action="" method="POST">
+					{% csrf_token %}
+					<div class="form-group">
+						<input type="email" class="form-control" placeholder="Email Address" name="email" required>
+					</div> <!-- form-group// -->
+					<div class="form-group">
+						<input type="password" class="form-control" placeholder="Password" name="password" required>
+					</div> <!-- form-group// -->
+					<div class="form-group">
+						<a href="{% url 'password_reset' %}" class="float-right">Forgot password?</a> 
+					</div> <!-- form-group form-check .// -->
+					<div class="form-group">
+						<button type="submit" class="btn btn-primary btn-block"> Login  </button>
+					</div> <!-- form-group// -->    
+				</form>
+			</div> <!-- card-body.// -->
+		</div> <!-- card .// -->
+		<p class="text-center mt-4">Don't have account? <a href="{% url 'register' %}">Sign up</a></p>
+		<br><br>
+
+	{% endif %}
+	<!-- ============================ COMPONENT LOGIN  END.// ================================= -->
+</section>
+
+{% endblock content %}

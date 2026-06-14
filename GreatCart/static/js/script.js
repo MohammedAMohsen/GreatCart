@@ -15,7 +15,7 @@ $(document).ready(function() {
 
 	//////////////////////// Prevent closing from click inside dropdown
     $(document).on('click', '.dropdown-menu', function (e) {
-      e.stopPropagation();
+        e.stopPropagation();
     });
 
 
@@ -58,3 +58,12 @@ $(document).ready(function() {
 }); 
 // jquery end
 
+$(document).ready(function () {
+
+    $('#message').slideDown(400);
+
+    setTimeout(function () {
+        $('#message').slideUp(500);
+    }, 5000);
+
+});

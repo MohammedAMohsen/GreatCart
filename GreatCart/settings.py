@@ -1,4 +1,8 @@
 from pathlib import Path
+from django.contrib.messages import constants as messages
+from dotenv import load_dotenv
+import os
+load_dotenv()
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -8,7 +12,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/6.0/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-&(oap^+-zcmx9v4dc9nk^_sv$n%9sqf6_$o-kg3!za8198-2^_'
+SECRET_KEY = os.getenv('SECRET_KEY')
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
@@ -125,3 +129,19 @@ STATICFILES_DIRS = [
 MEDIA_URL = '/media/'
 
 MEDIA_ROOT = BASE_DIR / 'media'
+
+MESSAGE_TAGS = {
+    messages.ERROR: 'danger',
+}
+
+# SMTP Contfiguration
+
+EMAIL_HOST = 'smtp.gmail.com'
+
+EMAIL_PORT = 587
+
+EMAIL_USE_TLS = True
+
+EMAIL_HOST_USER = os.getenv('EMAIL_USER')
+
+EMAIL_HOST_PASSWORD = os.getenv('EMAIL_PASS')

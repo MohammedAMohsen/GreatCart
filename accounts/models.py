@@ -14,7 +14,7 @@ class MyAccountManager(BaseUserManager):
             first_name = first_name,
             last_name = last_name)
         user.set_password(password)
-        user.save(using=self.db)
+        user.save(using=self._db)
         return user
     
     def create_superuser(self, first_name, last_name, username, email, password): 

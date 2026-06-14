@@ -1,0 +1,114 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+
+<section class="section-content padding-y mr-3 ml-3">
+	<!-- ============================ COMPONENT REGISTER   ================================= -->
+	<div class="card mx-auto" style="max-width:520px;">
+		<article class="card-body">
+			<header class="mb-4"><h4 class="card-title">Sign up</h4></header>
+			<form action="" method="POST">
+				{% csrf_token %}
+
+				<div class="form-row">
+					<div class="col form-group">
+						<label>{{ form.first_name.label }}</label>
+						<input
+							type="text"
+							class="form-control"
+							placeholder="First Name"
+							name="first_name"
+							value="{{ form.first_name.value|default:'' }}"
+							required>
+					</div> 
+					<div class="col form-group">
+						<label>{{ form.last_name.label }}</label>
+						<input
+							type="text"
+							class="form-control"
+							placeholder="Last Name"
+							name="last_name"
+							value="{{ form.last_name.value|default:'' }}">
+					</div> 
+				</div> 
+
+				<div class="form-group">
+					<label>{{ form.email.label }}</label>
+					{% if form.email.errors %}
+						<input
+							type="email"
+							class="form-control is-invalid"
+							placeholder="Email Address"
+							name="email"
+							value="{{ form.email.value|default:'' }}"
+							required>
+						{% for error in form.email.errors %}
+							<div class="invalid-feedback">{{ error }}</div>
+						{% endfor %}
+					{% else %}
+						<input
+							type="email"
+							class="form-control"
+							placeholder="Email Address"
+							name="email"
+							value="{{ form.email.value|default:'' }}"
+							required>
+					{% endif %}
+				</div>
+
+				<div class="form-row">
+					<div class="form-group col-md-6">
+						<label>{{ form.phone_number.label }}</label>
+						<input 
+							type="number"
+							class="form-control"
+							placeholder="Phone Number"
+							name="phone_number"
+							value="{{ form.phone_number.value|default:'' }}">
+					</div> 
+				</div>
+
+				<div class="form-row">
+					<div class="form-group col-md-6">
+						<label>{{ form.password1.label }}</label>
+						<input
+							class="form-control"
+							type="password"
+							name="password1"
+							placeholder="Password"
+							required>
+					</div> 
+					<div class="form-group col-md-6">
+						<label>{{ form.password2.label }}</label>
+						{% if form.password2.errors %}
+							<input
+								class="form-control is-invalid"
+								type="password"
+								name="password2"
+								placeholder="Password confirmation"
+								required>
+							{% for error in form.password2.errors %}
+								<div class="invalid-feedback">{{ error }}</div>
+							{% endfor %}
+						{% else %}
+							<input
+								class="form-control"
+								type="password"
+								name="password2"
+								placeholder="Password confirmation"
+								required>
+						{% endif %}
+					</div> 
+				</div>
+
+				<div class="form-group">
+					<button type="submit" class="btn btn-primary btn-block"> Register  </button>
+				</div>
+			</form>
+		</article>
+    </div>
+    <p class="text-center mt-4">Have an account? <a href="{% url 'login' %}">Log In</a></p>
+    <br><br>
+	<!-- ============================ COMPONENT REGISTER  END.// ================================= -->
+</section>
+{% endblock content %}

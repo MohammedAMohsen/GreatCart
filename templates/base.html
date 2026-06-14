@@ -38,34 +38,17 @@
 	}); 
 	// jquery end
 	</script>
-	<style>
-	.msg {
-		position: sticky;
-		top: 8.25rem;
-		left: 50%;
-		transform: translateX(-50%);
-		width: min(100%, 607px);
-	}
-	</style>
 </head>
 <body>
 
     <!-- navbar -->
     {% include 'includes/navbar.html' %}
 
-	<div class="text-center msg" >
-		{% if messages %}
-			{% for message in messages %}
-				<div class="alert alert-{{ message.tags }}">
-					{{ message }}
-				</div>
-			{% endfor %}
-		{% endif %}
-	</div>
+	{% include 'includes/alerts.html' %}
 
-    {% block content %}
-        <!-- content -->
-    {% endblock %}
+	{% block content %}
+		<!-- content -->
+	{% endblock %}
 
     <!-- footer -->
     {% include 'includes/footer.html' %}
