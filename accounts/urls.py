@@ -12,8 +12,17 @@ urlpatterns = [
     path('login/', views.login_page, name='login'),
     path('logout/', views.logout_page, name='logout'),
 
-    # Function-Based Reset_Password Views [FBVs]
-    path('password-reset/', views.password_reset, name='password_reset'),
-    path('password-reset-done/', views.password_reset_done, name='password_reset_done'),
-    path('password-change/<uidb64>/<token>/', views.password_change, name='password-change'),
+    # class-Based Reset_Password Views [CBVs]
+    path('password-reset/',
+        PasswordResetView.as_view(template_name='accounts/password_reset.html'),
+        name='password_reset'
+    ),
+    path('password-reset-done/',
+        PasswordResetDoneView.as_view(template_name='accounts/password_reset_done.html'),
+        name='password_reset_done'
+    ),
+    path('reset/<uidb64>/<token>/',
+        views.CustomPasswordResetConfirmView.as_view(template_name='accounts/password_reset_confirm.html'),
+        name='password_reset_confirm'
+    ),
 ]
