@@ -12,7 +12,7 @@ urlpatterns = [
     path('login/', views.login_page, name='login'),
     path('logout/', views.logout_page, name='logout'),
 
-    # class-Based Reset_Password Views [CBVs]
+    # class-Based Reset_Password Views (CBVs)
     path('password-reset/',
         PasswordResetView.as_view(template_name='accounts/password_reset.html'),
         name='password_reset'
