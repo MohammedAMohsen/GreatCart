@@ -1,6 +1,5 @@
 from django.shortcuts import render, get_object_or_404
-from store.models import Product
-from django.contrib import messages
+from store.models import Product, Variation
 from category.models import category
 from django.db.models import Q
 from carts.models import CartItem
@@ -50,9 +49,11 @@ def search(request):
 
 def product_detail(request, category_slug, product_slug):
     single_product = get_object_or_404(Product, slug=product_slug, category__slug=category_slug)
-    in_cart = CartItem.objects.filter(cart__cart_id=_cart_id(request), product=single_product).exists()
+    in_cart = CartItem.objects.filter(cart__identifier=_cart_id(request), product=single_product).exists()
+    is_has_variation = Variation.objects.filter(product=single_product).exists()
     context = {
         'single_product': single_product,
-        'in_cart': in_cart
+        'is_has_variation': is_has_variation,
+        'in_cart': in_cart,
     }
     return render(request, 'store/product_detail.html', context)

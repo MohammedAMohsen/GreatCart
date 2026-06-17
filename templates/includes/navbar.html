@@ -91,10 +91,10 @@
             <div class="col-lg-3 col-sm-12 col-md-12 col-12">
                 {% if request.user.is_authenticated %}
                     <div class="d-flex justify-content-md-end-special widgets-wrap">
-                        <a href="{% url 'store' %}" class="widget-header mr-3">
+                        <a href="{% url 'cart' %}" class="widget-header mr-3">
                             <div class="icon">
                                 <i class="icon-sm rounded-circle border fa fa-shopping-cart"></i>
-                                <span class="notify">0</span>
+                                <span class="notify">{{ cart_count }}</span>
                             </div>
                         </a>
                         <a href="#" class="widget-header mr-3">

@@ -1,6 +1,5 @@
 from .models import Cart, CartItem
 from .views import _cart_id
-from store.models import Product
 
 def counter(request):
     cart_count = 0
@@ -8,7 +7,7 @@ def counter(request):
         return {}
     else:
         try:
-            cart = Cart.objects.get(cart_id = _cart_id(request))
+            cart = Cart.objects.get(identifier = _cart_id(request))
             cart_items = CartItem.objects.all().filter(cart=cart)
             for cart_item in cart_items:
                 cart_count += cart_item.quantity

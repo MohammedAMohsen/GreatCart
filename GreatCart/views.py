@@ -4,7 +4,7 @@ from django.http import Http404
 
 
 def home(request):
-    products = Product.objects.all()[:8]
+    products = Product.objects.all().order_by('-created_date')[:8]
     context = {
         'products': products,
     }

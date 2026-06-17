@@ -6,6 +6,7 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.views import PasswordResetConfirmView
 from django.urls import reverse_lazy
+from carts.views import merge_cart
 
 # Verification email
 from django.contrib.sites.shortcuts import get_current_site
@@ -35,7 +36,6 @@ def register(request):
             })
             send_email = EmailMessage(mail_supject, message, to=[user.email])
             send_email.send()
-
             return redirect('/accounts/login/?command=verification&email='+user.email)
         else:
             messages.error(request, 'An error occured during registration')
@@ -67,6 +67,7 @@ def login_page(request):
         password = request.POST.get('password')
         user = authenticate(request, email=email, password=password)
         if user is not None:
+            merge_cart(request, user)
             login(request, user)
             return redirect(request.GET.get('next', 'dashboard'))
         messages.error(request, 'Invalid email or password !')
