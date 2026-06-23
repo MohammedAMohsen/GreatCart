@@ -153,9 +153,8 @@ def checkout(request, total=0, tax=0, grand_total=0, cart_items=None):
     try:
         cart = Cart.objects.get(identifier=_cart_id(request))
         cart_items = CartItem.objects.filter(cart=cart, is_active=True)
-        for cart_item in cart_items:
-            total += (cart_item.product.price * cart_item.quantity)
-        tax = (2 * total) / 100  # 2% قيمة الضريبة 
+        total = sum(item.quantity * item.product.price for item in cart_items)
+        tax = total * 0.02  # 2% قيمة الضريبة 
         grand_total = total + tax
     except ObjectDoesNotExist:
         pass

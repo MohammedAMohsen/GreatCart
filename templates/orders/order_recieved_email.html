@@ -1,0 +1,16 @@
+{% autoescape off %}
+
+Hi {{ user.first_name }}
+
+YOUR ORDER HAS BEEN RECIEVED
+
+Order Number: {{order.order_number}}
+
+Order Product:{% for product in order_products %}
+{{product.product.product_name}}{% endfor %}
+---------------------
+Total: {{total}}
+Tax  : {{tax}}
+Grand Total : {{grand_total}}
+
+{% endautoescape %}

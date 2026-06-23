@@ -6,7 +6,8 @@
         <!-- ============================ COMPONENT 1 ================================= -->
         <div class="row">
             <aside class="col-lg-6">
-                <form action="" method="POST">
+                <form action="{% url 'place-order' %}" method="POST">
+                {% csrf_token %}
                 <article class="card mb-4">
                     <div class="card-body">
                         <h4 class="card-title mb-4">Contact info</h4>
@@ -36,11 +37,11 @@
                         <div class="form-row">
                             <div class="col form-group">
                                 <label>Address Line 1</label>
-                                <input type="text" name="Address_Line_1" class="form-control" required>
+                                <input type="text" name="address_line_1" class="form-control" required>
                             </div>
                             <div class="col form-group">
                                 <label>Address Line 2</label>
-                                <input type="text" name="Address_Line_2" class="form-control">
+                                <input type="text" name="address_line_2" class="form-control">
                             </div>
                         </div>
                         <div class="form-row">
@@ -63,49 +64,7 @@
                         </div>
                     </div> <!-- card-body.// -->
                 </article> <!-- card.// -->
-                <article class="accordion" id="accordion_pay">
-                    <div class="card">
-                        <header class="card-header">
-                            <img src="{% static './images/misc/payment-paypal.png' %}" class="float-right" height="24"> 
-                            <label class="form-check collapsed" data-toggle="collapse" data-target="#pay_paynet">
-                                <input class="form-check-input" name="payment-option" checked type="radio" value="option2">
-                                <h6 class="form-check-label"> 
-                                    Paypal 
-                                </h6>
-                            </label>
-                        </header>
-                        <div id="pay_paynet" class="collapse show" data-parent="#accordion_pay">
-                        <div class="card-body">
-                            <p class="text-center text-muted">Connect your PayPal account and use it to pay your bills. You'll be redirected to PayPal to add your billing information.</p>
-                            <p class="text-center">
-                                <a href="#"><img src="{% static './images/misc/btn-paypal.png' %}" height="32"></a>
-                                <br><br>
-                            </p>
-                        </div> <!-- card body .// -->
-                        </div> <!-- collapse .// -->
-                    </div> <!-- card.// -->
-                    <div class="card">
-                    <header class="card-header">
-                        <img src="{% static './images/misc/payment-card.png' %}" class="float-right" height="24">  
-                        <label class="form-check" data-toggle="collapse" data-target="#pay_payme">
-                            <input class="form-check-input" name="payment-option" type="radio" value="option2">
-                            <h6 class="form-check-label"> Credit Card  </h6>
-                        </label>
-                    </header>
-                    <div id="pay_payme" class="collapse" data-parent="#accordion_pay">
-                        <div class="card-body">
-                            <p class="alert alert-success">Some information or instruction</p>
-                            <form class="form-inline">
-                                <input type="text" class="form-control mr-2" placeholder="xxxx-xxxx-xxxx-xxxx" name="">
-                                <input type="text" class="form-control mr-2" style="width: 100px"  placeholder="dd/yy" name="">
-                                <input type="number" maxlength="3" class="form-control mr-2"  style="width: 100px"  placeholder="cvc" name="">
-                                <button class="btn btn btn-success">Button</button>
-                            </form>
-                        </div> <!-- card body .// -->
-                    </div> <!-- collapse .// -->
-                    </div> <!-- card.// -->    
-                </article> 
-            </aside> <!-- col.// -->
+            </aside>
             <aside class="col-lg-6">
                 <div class="card">
                     <div class="card-body">

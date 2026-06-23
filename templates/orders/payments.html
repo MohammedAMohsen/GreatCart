@@ -1,0 +1,244 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+<section class="section-content padding-y bg" style="min-height: 55vh;">
+    <div class="container">
+        <!-- ============================ COMPONENT 1 ================================= -->
+        <!-- <h3 class="title-page text-center mb-5">Review Your Order and Make Payment</h3> -->
+        <div class="row">
+            <aside class="col-lg-8">
+                <div class="card mb-3">
+                    <h5 class="card-header">Billing Address</h5>
+                    <div class="card-body">
+                        <p class="text-secondary mb-1">{{order.full_name}}</p>
+                        <p class="text-secondary mb-1">{{order.full_address}}</p>
+                        <p class="text-secondary mb-1">{{order.city}}, {{order.state}}</p>
+                        <p class="text-secondary mb-1">{{order.country}}</p>
+                        <p class="text-secondary mb-1">{{order.email}}</p>
+                        <p class="text-secondary mb-1">{{order.phone}}</p>
+                        {% if order.order_note %}
+                        <b>Order Note: </b> <span class="text-secondary">{{order.order_note}}</span>
+                        {% endif %}
+                    </div>
+                </div>
+                <div class="card mb-3">
+                    <h5 class="card-header">Payment Method</h5>
+                    <div class="card-body">
+                        <p class="text-secondary mb-3">GreatCart Wallet <small style="color: rgba(0, 52, 196, 0.719); padding-left:5px"> Auto Option</small></p>
+                    </div>
+                </div>
+                <div class="card mb-3">
+                    <h5 class="card-header">Review Products</h5>
+                    <div class="card-body">
+                        <table class="table table-borderless table-shopping-cart">
+                            <thead class="text-muted">
+                                <tr class="small text-uppercase">
+                                    <th scope="col">Product</th>
+                                    <th scope="col" width="120" class="text-center">Quantity</th>
+                                    <th scope="col" width="120">Price</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for product in order_product %}
+                                <tr>
+                                    <td>
+                                        <figure class="itemside align-items-center">
+                                            <div class="aside"><img src="{{product.product.product_images.url}}"
+                                                    class="img-sm"></div>
+                                            <figcaption class="info">
+                                                <a href="{% url 'product-detail' product.product.category.slug product.product.slug %}"
+                                                    class="title text-dark">{{product.product.product_name}}</a>
+                                                <p class="text-muted small">
+                                                    {% if product.variations %}
+                                                    {% for item in product.variations %}
+                                                    {{ item.category | capfirst }} : {{ item.value | capfirst }} <br>
+                                                    {% endfor %}
+                                                    {% endif %}
+                                                </p>
+                                            </figcaption>
+                                        </figure>
+                                    </td>
+                                    <td>
+                                        <p class="text-center">{{product.quantity}}</p>
+                                    </td>
+                                    <td>
+                                        <div class="price-wrap">
+                                            <var class="price">${{product.sub_total}}</var>
+                                            <small class="text-muted"> ${{product.product.price}} each </small>
+                                        </div> <!-- price-wrap .// -->
+                                    </td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </aside> <!-- col.// -->
+            <aside class="col-lg-4">
+                <div class="card">
+                    <div class="card-body">
+                        <dl class="dlist-align">
+                            <dt>Total price:</dt>
+                            <dd class="text-right">${{total}}</dd>
+                        </dl>
+                        <dl class="dlist-align">
+                            <dt>Tax:</dt>
+                            <dd class="text-right"> ${{tax}}</dd>
+                        </dl>
+                        <dl class="dlist-align">
+                            <dt>Total:</dt>
+                            <dd class="text-right text-dark b"><strong>${{grand_total}}</strong></dd>
+                        </dl>
+                        <hr>
+                        <article class="accordion" id="accordion_pay">
+                            <div class="card">
+                                <header class="card-header">
+                                    <img src="{% static './images/logo.png' %}" class="float-right" height="24">
+                                    <label class="form-check" data-toggle="collapse" data-target="#pay_payme">
+                                        <input class="form-check-input" name="payment-option" checked type="radio"
+                                            value="option2">
+                                        <h6 class="form-check-label"> GreatCart Wallet </h6>
+                                    </label>
+                                </header>
+                                <div id="pay_payme" class="collapse show" data-parent="#accordion_pay">
+                                    <div class="card-body">
+                                        <p class="text-center text-muted">
+                                            Use the easiest and fastest GreatKart wallet to perform daily purchase
+                                            tasks,
+                                            make sure it is filled with the necessary balance and enjoy the fastest
+                                            payment process
+                                        </p>
+                                        <button id="open-payment-modal" class="btn btn-success btn-block">Pay
+                                            Now</button>
+                                    </div> <!-- card body .// -->
+                                </div> <!-- collapse .// -->
+                            </div> <!-- card.// -->
+                            <div class="card">
+                                <header class="card-header">
+                                    <img src="{% static './images/misc/payment-paypal.png' %}" class="float-right"
+                                        height="24">
+                                    <label class="form-check collapsed" data-toggle="collapse"
+                                        data-target="#pay_paynet">
+                                        <input class="form-check-input" name="payment-option" type="radio"
+                                            value="option2">
+                                        <h6 class="form-check-label">
+                                            Paypal
+                                        </h6>
+                                    </label>
+                                </header>
+                                <div id="pay_paynet" class="collapse" data-parent="#accordion_pay">
+                                    <div class="card-body">
+                                        <p class="text-center text-muted">
+                                            Connect your PayPal account and use it to pay your bills.
+                                            You'll be redirected to PayPal to add your billing information.
+                                        </p>
+                                        <p class="text-center">
+                                            <img src="{% static './images/misc/btn-paypal-comingsoon.png' %}"
+                                                height="32">
+                                            <br><br>
+                                            <b>
+                                                <p class="text-center">Coming Soon</p>
+                                            </b>
+                                        </p>
+                                    </div> <!-- card body .// -->
+                                </div> <!-- collapse .// -->
+                            </div>
+                    </div> <!-- card.// -->
+                    </article>
+                    <!-- Fake Payment Modal -->
+                    <div class="modal fade" id="fakePaymentModal" tabindex="-1">
+                        <div class="modal-dialog">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h5 class="modal-title">GreatCart Wallet Payment</h5>
+                                    <button type="button" class="close"
+                                        data-dismiss="modal"><span>&times;</span></button>
+                                </div>
+                                <div class="modal-body">
+                                    <p>Wallet Balance: <strong>$5000</strong></p>
+                                    <p>Order Amount: <strong>${{ grand_total }}</strong></p>
+                                    <hr>
+                                    <p>Remaining Balance: <strong>After payment</strong></strong></p>
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                                    <button id="confirm-payment" type="button" class="btn btn-primary">Confirm
+                                        Payment</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- End Fake Payment Modal -->
+                </div> <!-- card-body.// -->
+        </div> <!-- card.// -->
+        </aside> <!-- col.// -->
+    </div> <!-- row.// -->
+    <!-- ============================ COMPONENT 1 END .// ================================= -->
+    </div> <!-- container .//  -->
+</section>
+<!-- ========================= SECTION CONTENT END// ========================= -->
+<script>
+
+    function getCookie(name) {
+        let cookieValue = null;
+        if (document.cookie && document.cookie !== '') {
+            const cookies = document.cookie.split(';');
+            for (let i = 0; i < cookies.length; i++) {
+                const cookie = cookies[i].trim();
+                if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                    cookieValue = decodeURIComponent(
+                        cookie.substring(name.length + 1)
+                    );
+                    break;
+                }
+            }
+        }
+        return cookieValue;
+    }
+
+    const csrftoken = getCookie('csrftoken');
+    const url = "{% url 'payments' %}";
+    const orderID = "{{ order.order_number }}";
+    var redirect_url = "{% url 'order_complete' %}"
+
+    document
+        .getElementById('open-payment-modal')
+        .addEventListener('click', function () {
+            $('#fakePaymentModal').modal('show');
+        });
+
+    document
+        .getElementById('confirm-payment')
+        .addEventListener('click', function () {
+
+            fetch(url, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRFToken': csrftoken,
+                },
+                body: JSON.stringify({
+                    orderID: orderID,
+                    transID: 'DEMO-' + Date.now(),
+                    payment_method: 'GreatCart Wallet',
+                    status: 'COMPLETED',
+                })
+            })
+            .then(response => {
+                return response.json().then(data => {
+                    if (!response.ok) {
+                        throw new Error(data.message);
+                    }
+                    return data;
+                });
+            })
+            .then(data => {
+                window.location.href = redirect_url + '?order_number=' + data.order_number + '&payment_id=' + data.transID;
+            })
+            .catch(error => {
+                alert(error.message);
+            });
+        });
+
+</script>
+{% endblock %}
