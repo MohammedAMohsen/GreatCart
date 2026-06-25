@@ -1,6 +1,45 @@
 {% extends 'base.html' %}
 {% load static %}
 {% block content %}
+<style>
+    .rating-widget{
+        display:inline-block;
+    }
+
+    .rating-stars-input{
+        position:relative;
+        display:inline-block;
+        cursor:pointer;
+        user-select:none;
+    }
+
+    .rating-bg{
+        color:#d8d8d8;
+        font-size:21px;
+    }
+
+    .rating-fill{
+        position:absolute;
+        top:0;
+        left:0;
+        overflow:hidden;
+        white-space:nowrap;
+        color:orange;
+        width:0%;
+        pointer-events:none;
+        transition:width .12s ease;
+        font-size:21px;
+    }
+    .rating-bg,
+    .rating-fill{
+        display:flex;
+        gap:3px;
+    }
+    .rating-stars .stars-active,
+    .rating-stars-input .rating-fill{
+        width:var(--rating-width);
+    }
+</style>
 <section class="section-content padding-y bg">
     <div class="container">
         <div class="card">
@@ -17,6 +56,18 @@
                         {% csrf_token %}
                         <article class="content-body">
                             <h2 class="title">{{ single_product.product_name }}</h2>
+                            <ul class="rating-stars mb-2">
+                                <li style="--rating-width: {{ single_product.averageReviws }}%;" class="stars-active"> 
+                                    <i class="fa fa-star"></i> <i class="fa fa-star"></i> 
+                                    <i class="fa fa-star"></i> <i class="fa fa-star"></i> 
+                                    <i class="fa fa-star"></i> 
+                                </li>
+                                <li>
+                                    <i class="fa fa-star"></i> <i class="fa fa-star"></i> 
+                                    <i class="fa fa-star"></i> <i class="fa fa-star"></i> 
+                                    <i class="fa fa-star"></i> 
+                                </li>
+                            </ul> <small class="text-muted">{{ review_rating.count }} reviews</small>
                             <div class="mb-3"> 
                                 <var class="price h4">${{ single_product.price }}</var> 
                             </div> 
@@ -66,26 +117,129 @@
         <div class="row">
             <div class="col-md-9">
                 <header class="section-heading">
-                    <h3>Customer Reviews </h3>  
+                    <h3>Customer Reviews <small class="text-muted">({{ review_rating.count }})</small></h3>  
                 </header>
+                {% if request.user.is_authenticated and is_ordered%}
+                <form method="POST" action="">
+                    {% csrf_token %}
+                    <div class="mb-3">
+                        <label class="font-weight-bold">Rate this product</label>
+                            <br>
+                            <div class="rating-widget">
+                                <div class="rating-stars-input" id="rating-stars">
+                                    <div class="rating-bg">
+                                        <i class="fas fa-star"></i>
+                                        <i class="fas fa-star"></i>
+                                        <i class="fas fa-star"></i>
+                                        <i class="fas fa-star"></i>
+                                        <i class="fas fa-star"></i>
+                                    </div>
+                                    <div class="rating-fill" id="rating-fill">
+                                        <i class="fas fa-star"></i>
+                                        <i class="fas fa-star"></i>
+                                        <i class="fas fa-star"></i>
+                                        <i class="fas fa-star"></i>
+                                        <i class="fas fa-star"></i>
+                                    </div>
+                                </div>
+                                <small id="rating-text" class="text-muted d-block mt-2">Select rating</small>
+                            </div>
+                            <input type="hidden" name="rating" id="rating-value" value="0">
+                        </div>
+                    <div class="input-group">
+                        <input class="form-control" name="review" placeholder="Write your review here ..." style="height: 3.5rem;">
+                        <div class="input-group-append">
+                            <button class="btn btn-primary" type="submit">
+                                <i class="fas fa-paper-plane" style="width: 2rem;"></i>
+                            </button>
+                        </div>
+                    </div>
+                </form>
+                <hr>
+                {% elif not request.user.is_authenticated %}
+                    <p>You must be logged in to post a review. <a href="{% url 'login' %}">Login now</a></p>
+                {% else %}
+                    <p>You mast have purchased the product too be able to leave a review</p>
+                {% endif %}
+                {% for review in review_rating %}
                 <article class="box mb-3">
                     <div class="icontext w-100">
-                        <img src="{% static './images/avatars/avatar1.jpg' %}" class="img-xs icon rounded-circle">
+                        <img src="{% static './images/avatars/default.jpg' %}" class="img-xs icon rounded-circle">
                         <div class="text">
-                            <span class="date text-muted float-md-right">24.04.2020 </span>  
-                            <h6 class="mb-1">Mike John </h6>
+                            <span class="date text-muted float-md-right">{{review.created_at|timesince}}</span>  
+                            <h6 class="mb-1">{{review.user.full_name}}</h6>
+                            <ul class="rating-stars mb-2">
+                                <li style="--rating-width: {{ review.rating_user }}%;" class="stars-active"> 
+                                    <i class="fa fa-star"></i> <i class="fa fa-star"></i> 
+                                    <i class="fa fa-star"></i> <i class="fa fa-star"></i> 
+                                    <i class="fa fa-star"></i> 
+                                </li>
+                                <li>
+                                    <i class="fa fa-star"></i> <i class="fa fa-star"></i> 
+                                    <i class="fa fa-star"></i> <i class="fa fa-star"></i> 
+                                    <i class="fa fa-star"></i> 
+                                </li>
+                            </ul>
                         </div>
                     </div> <!-- icontext.// -->
                     <div class="mt-3">
-                        <p>
-                            Dummy comment Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod
-                            tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam,
-                            quis nostrud exercitation ullamco laboris nisi ut aliquip
-                        </p>	
+                        <p>{{review.review}}</p>	
                     </div>
                 </article>
+                {% endfor %}
             </div> <!-- col.// -->
         </div> <!-- row.// -->
     </div> <!-- container .//  -->
 </section>
+<script>
+    const widget = document.getElementById('rating-stars');
+    const fill = document.getElementById('rating-fill');
+    const input = document.getElementById('rating-value');
+    const text = document.getElementById('rating-text');
+    let selectedRating = 0;
+    function paint(rating){
+        fill.style.width = (rating / 5) * 100 + '%';
+        if(rating > 0){
+            text.innerHTML = rating + ' / 5';
+        }else{
+            text.innerHTML = 'Select rating';
+        }
+    }
+    widget.addEventListener('mousemove', function(e){
+        const rect = widget.getBoundingClientRect();
+        let percent =
+            (e.clientX - rect.left) / rect.width;
+        percent = Math.max(
+            0,
+            Math.min(
+                1,
+                percent
+            )
+        );
+        let rating = percent * 5;
+        rating =
+            Math.round(rating * 2) / 2;
+        paint(rating);
+    });
+    widget.addEventListener('mouseleave', function(){
+        paint(selectedRating);
+    });
+    widget.addEventListener('click', function(e){
+        const rect = widget.getBoundingClientRect();
+        let percent =
+            (e.clientX - rect.left) / rect.width;
+        percent = Math.max(
+            0,
+            Math.min(
+                1,
+                percent
+            )
+        );
+        selectedRating =
+            Math.round(percent * 5 * 2) / 2;
+        input.value = selectedRating;
+        paint(selectedRating);
+    });
+    paint(0);
+</script>
 {% endblock %}
