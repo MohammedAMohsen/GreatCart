@@ -130,3 +130,19 @@ def profile_setting(request):
         'ProfileForm': ProfileForm
     }
     return render(request, 'accounts/profile_setting.html', context)
+
+
+@login_required(login_url='login')
+def password_change(request):
+    form = ChangePassword(user=request.user)
+    if request.method == 'POST':
+        form = ChangePassword(user=request.user, data=request.POST)
+        if form.is_valid():
+            form.save()
+            messages.success(request, 'The password has been successfully changed.')
+            login(request, request.user) # --> لان بعد تغيير كلمة المرور يقوم النظام بعمل تسجيل خروج, لذا نرجع المستخدم كما كان مسجل
+            return redirect('dashboard')
+        else:
+            messages.error(request, 'The old password is incorrect or the new password does not match.')
+    context = {'form': form}
+    return render(request, 'accounts/password_change.html', context)
