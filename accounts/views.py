@@ -1,12 +1,13 @@
 from django.shortcuts import render, redirect
-from .form import RegisterForm
-from .models import Account
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.views import PasswordResetConfirmView
 from django.urls import reverse_lazy
 from carts.views import merge_cart
+from orders.models import Order
+from .form import RegisterForm, UserUpdateForm, ProfileUpdateForm, ChangePassword
+from .models import Account
 
 # Verification email
 from django.contrib.sites.shortcuts import get_current_site
@@ -24,7 +25,19 @@ def register(request):
         form = RegisterForm(request.POST)
         if form.is_valid():
             user = form.save()
-            
+
+            # Create Profile User (Manual) or (automatically)
+            # ---------------------------------------------------------------
+            # Option 1 (Simple Projects):
+            # Create the Profile directly here.
+            # Uncomment the line below if you are NOT using Django signals.
+            # Profile.objects.create(user=user)
+
+            # Option 2 (Recommended for Larger Projects): (Use Now ...)
+            # The Profile is created automatically by the post_save signal
+            # defined in accounts/signals.py, so no extra code is needed here.
+            # ---------------------------------------------------------------
+
             # User Activetion
             current_site = get_current_site(request)
             mail_supject = 'please actiave your account'
@@ -89,3 +102,31 @@ class CustomPasswordResetConfirmView(PasswordResetConfirmView):
 @login_required(login_url='login')
 def dashboard(request):
     return render(request, 'accounts/dashboard.html')
+
+
+@login_required(login_url='login')
+def my_orders(request):
+    orders = Order.objects.filter(user=request.user).order_by('-cerated_at')
+    context = {'orders': orders}
+    return render(request, 'accounts/my_orders.html', context)
+
+
+@login_required(login_url='login')
+def profile_setting(request):
+    if request.method == "POST":
+        UserForm = UserUpdateForm(request.POST, instance=request.user)
+        ProfileForm = ProfileUpdateForm(request.POST, request.FILES, instance=request.user.profile)
+        if UserForm.is_valid() and ProfileForm.is_valid():
+            UserForm.save()
+            ProfileForm.save()
+            messages.success(request, 'Your account has been updated!')
+        else:
+            messages.error(request, 'There is something error')
+    else:
+        UserForm = UserUpdateForm(instance=request.user)
+        ProfileForm = ProfileUpdateForm(instance=request.user.profile)
+    context = {
+        'UserForm': UserForm,
+        'ProfileForm': ProfileForm
+    }
+    return render(request, 'accounts/profile_setting.html', context)

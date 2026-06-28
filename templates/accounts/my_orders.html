@@ -1,0 +1,82 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+<style>
+    .current {
+        animation: change-color .8s infinite alternate;
+    }
+
+    @keyframes change-color {
+        0% {
+            background-color: #ff9017;
+        }
+
+        100% {
+            background-color: #ffdeb8;
+            border-color: #ffdeb8;
+        }
+    }
+</style>
+<section class="section-conten padding-y bg" style="min-height:53vh">
+    <div class="container">
+        <div class="row">
+            {% include 'includes/dashboard_sidebar.html' %}
+            <main class="col-md-9">
+                <article class="card">
+                    <header class="card-header">
+                        <strong class="d-inline-block mr-3">Your order history:</strong>
+                    </header>
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-md-12">
+                                <table class="table table-hover">
+                                    <thead>
+                                        <tr>
+                                            <th scope="col">Order #</th>
+                                            <th scope="col">Billing Name</th>
+                                            <th scope="col">Phone</th>
+                                            <th scope="col">Order Total</th>
+                                            <th scope="col">Date</th>
+                                            <th scope="col">Status</th>
+                                        </tr>
+                                    </thead>
+                                    <tbod>
+                                        {% for order in orders %}
+                                        <tr>
+                                            <th scope="row">
+                                                {% if order.status == "Pending" %}
+                                                <a href="{% url 'payment_page' order.order_number %}">
+                                                    {{order.order_number}}
+                                                </a>
+                                                {% elif order.status == "Cancelled" %}
+                                                <div style="color: brown;">{{order.order_number}}</diav>
+                                                    {% else %}
+                                                    <a
+                                                        href="{% url 'order_complete' %}?order_number={{order.order_number}}&payment_id={{order.payment}}">
+                                                        {{order.order_number}}
+                                                    </a>
+                                                    {% endif %}
+                                            </th>
+                                            <td>{{order.full_name}}</td>
+                                            <td>{{order.phone}}</td>
+                                            <td>${{order.order_total}}</td>
+                                            <td>{{order.cerated_at}}</td>
+                                            <td>
+                                                <div class="btn btn-block btn-{% if order.status == 'Pending' %}warning current{% elif order.status == 'Cancelled' %}danger{% else %}success{% endif %}"
+                                                    style="font-size: 14px; padding: 5px;">
+                                                    {{order.status}}
+                                                </div>
+                                            </td>
+                                        </tr>
+                                        {% endfor %}
+                                    </tbod>
+                                </table>
+                            </div>
+                        </div> <!-- row.// -->
+                    </div> <!-- card-body .// -->
+                </article> <!-- order-group.// -->
+            </main>
+        </div> <!-- row.// -->
+    </div>
+</section>
+{% endblock content %}

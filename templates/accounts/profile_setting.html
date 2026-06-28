@@ -1,0 +1,124 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+	<section class="section-conten padding-y bg" style="min-height:53vh">
+		<div class="container">
+			<div class="row">
+				{% include 'includes/dashboard_sidebar.html' %}
+				<main class="col-md-9">
+					<article class="card">
+						<header class="card-header">
+							<strong class="d-inline-block mr-3">Edit Your Profile</strong>
+						</header>
+						<div class="card-body">
+							<div class="row"> 
+                                <div class="col-md-12 mb-2" style="text-align-last: center;">
+                                    <img src="{{user.profile.profile_picture.url}}" alt="User Profile Picture"  class="img-md icon rounded-circle"><br>
+                                    <label class="mt-3">Upload Picture</label>
+                                </div>
+								<div class="col-md-12">
+									<form action="" method="POST" enctype="multipart/form-data">
+                                        {% csrf_token %}
+                                        <div class="col form-group mb-5" style="text-align-last: center">
+                                            {{ProfileForm.profile_picture}}
+                                        </div>
+                                        <div class="row">
+                                            <div class="form-group col-sm-6">
+                                                <label>First name</label>
+                                                <input 
+                                                    type="text"
+                                                    name="first_name"
+                                                    class="form-control"
+                                                    {% if UserForm.first_name.value %}
+                                                    value="{{UserForm.first_name.value}}"
+                                                    {% endif %}
+                                                    required>
+                                            </div>
+                                            <div class="form-group col-sm-6">
+                                                <label>Last name</label>
+                                                <input
+                                                    type="text"
+                                                    name="last_name" 
+                                                    class="form-control"
+                                                    {% if UserForm.last_name.value %}
+                                                    value="{{UserForm.last_name.value}}"
+                                                    {% endif %}
+                                                    required>
+                                            </div>
+                                            <div class="form-group col-sm-12">
+                                                <label>Phone</label>
+                                                <input
+                                                    type="text"
+                                                    name="phone_number"
+                                                    class="form-control"
+                                                    {% if UserForm.phone_number.value %}
+                                                    value="{{UserForm.phone_number.value}}"
+                                                    {% endif %}
+                                                    required>
+                                            </div>
+                                        </div> <!-- row.// -->	
+                                        <div class="form-row">
+                                            <div class="col form-group">
+                                                <label>Address Line 1</label>
+                                                <input
+                                                    type="text"
+                                                    name="address_line_1"
+                                                    class="form-control"
+                                                    {% if ProfileForm.address_line_1.value %}
+                                                    value="{{ProfileForm.address_line_1.value}}"
+                                                    {% endif %}>
+                                            </div>
+                                            <div class="col form-group">
+                                                <label>Address Line 2</label>
+                                                <input
+                                                    type="text"
+                                                    name="address_line_2"
+                                                    class="form-control"
+                                                    {% if ProfileForm.address_line_2.value %}
+                                                    value="{{ProfileForm.address_line_2.value}}"
+                                                    {% endif %}>
+                                            </div>
+                                        </div>
+                                        <div class="form-row">
+                                            <div class="col form-group">
+                                                <label>City</label>
+                                                <input
+                                                    type="text"
+                                                    name="city"
+                                                    class="form-control"
+                                                    {% if ProfileForm.city.value %}
+                                                    value="{{ProfileForm.city.value}}"
+                                                    {% endif %}>
+                                            </div>
+                                            <div class="col form-group">
+                                                <label>State</label>
+                                                <input
+                                                    type="text"
+                                                    name="state"
+                                                    class="form-control"
+                                                    {% if ProfileForm.state.value %}
+                                                    value="{{ProfileForm.state.value}}"
+                                                    {% endif %}>
+                                            </div>
+                                            <div class="col form-group">
+                                                <label>Country</label>
+                                                <input
+                                                    type="text"
+                                                    name="country"
+                                                    class="form-control"
+                                                    {% if ProfileForm.country.value %}
+                                                    value="{{ProfileForm.country.value}}"
+                                                    {% endif %}>
+                                            </div>
+                                        </div>
+                                        <button type="submit" name="submit" class="btn btn-primary" style="width: 8rem;"> Save </button>
+                                    </form>
+								</div>
+							</div> <!-- row.// -->
+						</div> <!-- card-body .// -->
+					</article> <!-- order-group.// --> 
+				</main>
+			</div> <!-- row.// -->
+		</div>
+	</section>
+{% endblock content %}

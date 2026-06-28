@@ -143,8 +143,30 @@
                                     </div> <!-- card body .// -->
                                 </div> <!-- collapse .// -->
                             </div>
+                        </article>
+                        <button 
+                            type="button"
+                            class="btn btn-outline-danger btn-block mt-4 mb-1"
+                            data-toggle="modal" data-target="#deleteModal">
+                            Cancel Order
+                        </button>
+                        <div class="modal fade" id="deleteModal" tabindex="-1" role="dialog" aria-labelledby="deleteModalLabel" aria-hidden="true">
+                            <div class="modal-dialog" role="document">
+                                <div class="modal-content">
+                                <div class="modal-header">
+                                    <h5 class="modal-title" id="deleteModalLabel">Are you sure to cancel the order?</h5>
+                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                    </button>
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                                    <a class="btn btn-danger" href="{% url 'cancel-order' order.order_number %}">Yes</a>
+                                </div>
+                                </div>
+                            </div>
+                        </div>
                     </div> <!-- card.// -->
-                    </article>
                     <!-- Fake Payment Modal -->
                     <div class="modal fade" id="fakePaymentModal" tabindex="-1">
                         <div class="modal-dialog">
@@ -156,7 +178,7 @@
                                 </div>
                                 <div class="modal-body">
                                     <p>Wallet Balance: <strong>$5000</strong></p>
-                                    <p>Order Amount: <strong>${{ grand_total }}</strong></p>
+                                    <p>Order Amount: <strong>${{ grand_total }}</strong></p> 
                                     <hr>
                                     <p>Remaining Balance: <strong>After payment</strong></strong></p>
                                 </div>
@@ -169,8 +191,9 @@
                         </div>
                     </div>
                     <!-- End Fake Payment Modal -->
+                    
                 </div> <!-- card-body.// -->
-        </div> <!-- card.// -->
+            </div> <!-- card.// -->
         </aside> <!-- col.// -->
     </div> <!-- row.// -->
     <!-- ============================ COMPONENT 1 END .// ================================= -->

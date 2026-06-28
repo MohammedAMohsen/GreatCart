@@ -7,9 +7,9 @@ class OrderProductInline(admin.TabularInline):
     readonly_fields = ('product', 'variations', 'quantity', 'product_price', 'order', 'payment', 'user', 'ordered')
     
 class OrderAdmin(admin.ModelAdmin):
-    list_display = ('order_number', 'full_name', 'phone', 'email', 'city', 'order_total', 'tax', 'status', 'is_ordered', 'cerated_at')
+    list_display = ('order_number', 'full_name', 'phone', 'email', 'city', 'order_total', 'tax', 'status', 'cerated_at')
     search_fields = ('order_number', 'first_name', 'last_name', 'phone', 'email')
-    list_filter = ('status', 'is_ordered')
+    list_filter = ('status',)
     list_per_page = 20
     inlines = [OrderProductInline]
 

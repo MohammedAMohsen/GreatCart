@@ -1,6 +1,6 @@
 from django import forms
 from django.contrib.auth.forms import UserCreationForm
-from .models import Account
+from .models import Account, Profile
 
 
 class RegisterForm(UserCreationForm):
@@ -23,3 +23,18 @@ class RegisterForm(UserCreationForm):
         user.username = username
         user.save()
         return user
+
+
+class UserUpdateForm(forms.ModelForm):
+    class Meta:
+        model = Account
+        fields = ['first_name', 'last_name', 'phone_number']
+
+
+class ProfileUpdateForm(forms.ModelForm):
+    class Meta:
+        model = Profile
+        fields = ['profile_picture', 'address_line_1', 'address_line_2', 'country', 'state', 'city']
+        widgets = { # رابط الصورة الحالية Currentlyعشان اعرض فقط حقل اختيار للصورة بدون ال
+            'profile_picture': forms.FileInput()
+        }

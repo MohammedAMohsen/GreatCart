@@ -164,7 +164,7 @@
                 {% for review in review_rating %}
                 <article class="box mb-3">
                     <div class="icontext w-100">
-                        <img src="{% static './images/avatars/default.jpg' %}" class="img-xs icon rounded-circle">
+                        <img src="{{review.user.profile.profile_picture.url}}" class="img-xs icon rounded-circle">
                         <div class="text">
                             <span class="date text-muted float-md-right">{{review.created_at|timesince}}</span>  
                             <h6 class="mb-1">{{review.user.full_name}}</h6>

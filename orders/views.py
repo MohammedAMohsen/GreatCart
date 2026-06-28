@@ -1,4 +1,4 @@
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
 from carts.views import _cart_id
 from carts.models import CartItem
@@ -18,7 +18,7 @@ def place_order(request):
     if not cart_items.exists():
         return redirect('store')
     
-    pending_order = Order.objects.filter(user=request.user, is_ordered=False).first()
+    pending_order = Order.objects.filter(user=request.user, status='Pending').first()
     if pending_order:
         messages.warning(request, 'You already have order that has not been completed!')
         return redirect('payment_page', order_number=pending_order.order_number)
@@ -67,8 +67,11 @@ def place_order(request):
 def payment_page(request, order_number):
     try:
         order = Order.objects.get(user=request.user, order_number=order_number)
-        if order.status == 'Completed' or order.is_ordered:
+        if order.status == 'Completed':
             messages.info(request, 'This order has already been completed!')
+            return redirect('store')
+        if order.status == 'Cancelled':
+            messages.info(request, 'This order has been Canceled!')
             return redirect('store')
         order_product = OrderProduct.objects.filter(order=order)
         context = {
@@ -91,7 +94,7 @@ def payments(request):
     body = json.loads(request.body)
     order = Order.objects.filter(user=request.user, order_number=body['orderID']).first()
 
-    if order.is_ordered:
+    if order.status == 'Completed':
         return JsonResponse({'message':'Payment already completed'}, status=400)
     
     # Check the availability of the product
@@ -109,7 +112,6 @@ def payments(request):
         status=body['status'],
     )
     order.payment = payment
-    order.is_ordered = True
     order.status = 'Completed'
     order.save()
 
@@ -144,7 +146,7 @@ def order_complete(request):
     order_number = request.GET.get('order_number')
     payment_id = request.GET.get('payment_id')
     try:
-        order = Order.objects.get(user=request.user, order_number=order_number, payment__payment_id=payment_id)
+        order = get_object_or_404(Order, user=request.user, order_number=order_number, payment__payment_id=payment_id)
         order_products = OrderProduct.objects.filter(order=order, ordered=True)
         context = {
             'order_products': order_products,
@@ -154,3 +156,11 @@ def order_complete(request):
     except(Payment.DoesNotExist, Order.DoesNotExist):
         return redirect('home')
     return render(request, 'orders/order_complete.html', context)
+
+
+def cancel_order(request, order_number):
+    order = get_object_or_404(Order, order_number=order_number, user=request.user)
+    order.status = 'Cancelled'
+    order.save()
+    messages.success(request, 'Order has been sucessfully canceled')
+    return redirect('store')
