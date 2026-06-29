@@ -2,41 +2,81 @@
 {% load static %}
 {% block content %}
 
-	<section class="section-conten padding-y bg" style="min-height:53vh">
-		<div class="container">
-			<div class="row">
-				{% include 'includes/dashboard_sidebar.html' %}
-				<main class="col-md-9">
-					<article class="card">
-						<header class="card-header">
-							<span><b>Happy Day: </b>{{user.full_name|capfirst}}</span>
-						</header>
-						<div class="card-body">
-							<div class="row"> 
-								<div class="col-md-6">
-									<div class="card" style="text-align: center;">
-										<div class="card-body">
-											<h5 class="card-title">Total Orders</h5>
-											<h4>{{ user.order_set.count }}</h4>
-											<a href="#">View Orders</a>
-										</div>
-									</div>
+<section class="section-conten padding-y bg" style="min-height:53vh">
+	<div class="container">
+		<div class="row">
+			{% include 'includes/dashboard_sidebar.html' %}
+			<main class="col-md-9">
+				<article class="card mb-3">
+					<div class="card-body">
+						<figure class="icontext">
+							<div class="icon">
+								<img class="rounded-circle img-sm border" src="{{ user.profile.profile_picture.url }}">
+							</div>
+							<div class="text">
+								<strong> Mr. {{user.full_name}} </strong> <br>
+								<p class="mb-2"> {{user.email}} </p>
+								<a href="{% url 'profile-setting' %}" class="btn btn-light btn-sm">Edit</a>
+							</div>
+						</figure>
+						<hr>
+						<p>
+							<i class="fa fa-map-marker text-muted"></i> &nbsp; My address:
+							<br>
+							{{user.profile.full_address}}
+							<a href="{% url 'profile-setting' %}" class="btn-link"> Edit</a>
+						</p>
+						<article class="card-group card-stat">
+							<figure class="card bg">
+								<div class="p-3">
+									<h4 class="title">{{user.order_set.count}}</h4>
+									<span>Orders</span>
 								</div>
-								<div class="col-md-6">
-									<div class="card" style="text-align: center;">
-										<div class="card-body">
-											<img src="{{user.profile.profile_picture.url}}" alt="User Profile Picture"  class="img-sm icon rounded-circle">
-											<p class="mb-0">{{ user.email }}</p>
-											<p>{{ user.phone_number }}</p>
-											<p></p>
-										</div>
-									</div>
+							</figure>
+							<figure class="card bg">
+								<div class="p-3">
+									<h4 class="title">0</h4>
+									<span>Wishlists</span>
 								</div>
-							</div> <!-- row.// -->
-						</div> <!-- card-body .// -->
-					</article> <!-- order-group.// --> 
-				</main>
-			</div> <!-- row.// -->
-		</div>
-	</section>
+							</figure>
+							<figure class="card bg">
+								<div class="p-3">
+									<h4 class="title">{{user.order_set.pending.count}}</h4>
+									<span>Order Pending</span>
+								</div>
+							</figure>
+							<figure class="card bg">
+								<div class="p-3">
+									<h4 class="title">{{user.order_set.completed.count}}</h4>
+									<span>Order Completed</span>
+								</div>
+							</figure>
+						</article>
+					</div> <!-- card-body .// -->
+				</article> <!-- card.// -->
+				<article class="card  mb-3">
+					<div class="card-body">
+						<h5 class="card-title mb-4">Recent orders </h5>
+						<div class="row">
+							{% for i in recent_orders %}
+							<div class="col-md-6">
+								<figure class="itemside  mb-3">
+									<div class="aside"><img src="{{i.product.product_images.url}}" class="border img-sm"></div>
+									<figcaption class="info">
+										<time class="text-muted"><i class="fa fa-calendar-alt"></i> {{i.strfcreate}}</time>
+										<a href="{% url 'product-detail' i.product.category.slug i.product.slug %}" style="color: black;"><p>{{i.product.product_name}}</p></a>
+										<span class="text-success">Order confirmed </span>
+									</figcaption>
+								</figure>
+							</div> <!-- col.// -->
+							{% endfor %}
+						</div> <!-- row.// -->
+						<a href="{% url 'my-orders' %}" class="btn btn-outline-primary btn-block"> See all orders <i
+								class="fa fa-chevron-down"></i> </a>
+					</div> <!-- card-body .// -->
+				</article> <!-- card.// -->
+			</main> <!-- col.// -->
+		</div> <!-- row.// -->
+	</div>
+</section>
 {% endblock content %}

@@ -1,5 +1,5 @@
 from django.shortcuts import render, get_object_or_404, redirect
-from store.models import Product, Variation, ReviewRating
+from store.models import Product, Variation, ReviewRating, ProductGallery
 from category.models import category
 from django.db.models import Q
 from carts.models import CartItem
@@ -51,6 +51,7 @@ def search(request):
 def product_detail(request, category_slug, product_slug, is_ordered=''):
     url = request.META.get('HTTP_REFERER')
     single_product = get_object_or_404(Product, slug=product_slug, category__slug=category_slug)
+    product_gallery = ProductGallery.objects.filter(product=single_product)
     in_cart = CartItem.objects.filter(cart__identifier=_cart_id(request), product=single_product).exists()
     is_has_variation = Variation.objects.filter(product=single_product).exists()
     if request.user.is_authenticated:
@@ -75,6 +76,7 @@ def product_detail(request, category_slug, product_slug, is_ordered=''):
 
     context = {
         'single_product': single_product,
+        'product_gallery': product_gallery,
         'is_has_variation': is_has_variation,
         'in_cart': in_cart,
         'review_rating': review_rating,

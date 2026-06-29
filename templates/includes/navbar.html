@@ -111,9 +111,9 @@
                                 <span class="ml-1">{{ request.user.first_name }}</span>
                             </a>
                             <div class="dropdown-menu dropdown-menu-right">
-                                <a class="dropdown-item" href="#">Profile setting</a>
                                 <a class="dropdown-item" href="{% url 'dashboard' %}">Dashboard</a>
                                 <a class="dropdown-item" href="{% url 'my-orders' %}">My orders</a>
+                                <a class="dropdown-item" href="{% url 'profile-setting' %}">Setting</a>
                                 <hr class="dropdown-divider">
                                 <a class="dropdown-item" href="{% url 'logout' %}">Log out</a>
                             </div> <!--  dropdown-menu .// -->

@@ -14,6 +14,13 @@ class Payment(models.Model):
         return self.payment_id
 
 
+class StatusProduct(models.Manager):
+    def pending(self):
+        return self.filter(status='Pending')
+    
+    def completed(self):
+        return self.filter(status='Completed')
+
 class Order(models.Model):
     STATUS = (
         ('Pending', 'Pending'),
@@ -41,6 +48,8 @@ class Order(models.Model):
     cerated_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
+    objects = StatusProduct()
+
     def full_name(self):
         return f'{self.first_name} {self.last_name}'
     
@@ -65,6 +74,9 @@ class OrderProduct(models.Model):
 
     def sub_total(self):
         return self.product.price * self.quantity
+    
+    def strfcreate(self):
+        return self.cerated_at.strftime('%Y,%m,%d')
 
     def __str__(self):
         return self.product.product_name

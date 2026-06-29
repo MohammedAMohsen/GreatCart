@@ -36,10 +36,10 @@
 				<aside class="col-sm-3  col-md-2">
 					<h6 class="title">For users</h6>
 					<ul class="list-unstyled">
-						<li> <a href="#"> User Login </a></li>
-						<li> <a href="#"> User register </a></li>
-						<li> <a href="#"> Account Setting </a></li>
-						<li> <a href="#"> My Orders </a></li>
+						<li> <a href="{% url 'login' %}"> User Login </a></li>
+						<li> <a href="{% url 'register' %}"> User register </a></li>
+						<li> <a href="{% url 'profile-setting' %}"> Account Setting </a></li>
+						<li> <a href="{% url 'my-orders' %}"> My Orders </a></li>
 						<li> <a href="#"> My Wishlist </a></li>
 					</ul>
 				</aside>
@@ -48,8 +48,8 @@
 					<a href="#" class="d-block mb-2"><img src="{% static './images/misc/appstore.png' %}" height="40"></a>
 					<a href="#" class="d-block mb-2"><img src="{% static './images/misc/playmarket.png' %}" height="40"></a>
 				</aside>
-			</div> <!-- row.// -->
-		</section>	<!-- footer-top.// -->
+			</div> 
+		</section>	
 		<section class="footer-copyright border-top">
 				<p target="_blank" class="float-right text-muted">
 					<a href="#">Privacy &amp; Cookies</a> &nbsp;   &nbsp; 

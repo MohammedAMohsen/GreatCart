@@ -39,6 +39,24 @@
     .rating-stars-input .rating-fill{
         width:var(--rating-width);
     }
+    ul.thumb{
+        margin: 0 auto;
+        padding: 0;
+        float: left;
+    }
+    ul.thumb li{
+        list-style: none;
+        margin: 10px;
+    }
+    ul.thumb li img{
+        width: 80px;
+        height: 80px;
+        border: 1px solid gray;
+    }
+    .col-md-6{
+        display: flex;
+        flex-direction: column;
+    }
 </style>
 <section class="section-content padding-y bg">
     <div class="container">
@@ -46,10 +64,20 @@
             <div class="row no-gutters">
                 <aside class="col-md-6">
                     <article class="gallery-wrap"> 
-                        <div class="img-big-wrap">
-                            <a href="{{ single_product.product_images.url }}"><img src="{{ single_product.product_images.url }}"></a>
+                        <div class="img-big-wrap mainImage">
+                            <center><img src="{{ single_product.product_images.url }}"></center>
                         </div> <!-- img-big-wrap.// -->
                     </article> <!-- gallery-wrap .end// -->
+                    {% if product_gallery %}
+                    <ul class="thumb">
+                        <li>
+                        <a href="{{ single_product.product_images.url }}" target="mainImage"><img src="{{ single_product.product_images.url }}"></a>
+                        {% for i in product_gallery %}
+                        <a href="{{ i.image.url }}" target="mainImage"><img src="{{ i.image.url }}" alt="Product Image"></a>
+                        {% endfor %}
+                        </li>
+                    </ul>
+                    {% endif %}
                 </aside>
                 <main class="col-md-6 border-left">
                     <form action="{% url 'add-cart' single_product.id %}" method="POST">

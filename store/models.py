@@ -68,3 +68,11 @@ class ReviewRating(models.Model):
     
     def rating_user(self):
         return (self.rating / 5 ) * 100
+
+
+class ProductGallery(models.Model):
+    product = models.ForeignKey(Product, on_delete=models.CASCADE, default=None)
+    image = models.ImageField(upload_to='photos/products', max_length=255, blank=True)
+
+    def __str__(self):
+        return self.product.product_name

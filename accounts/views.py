@@ -5,7 +5,7 @@ from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.views import PasswordResetConfirmView
 from django.urls import reverse_lazy
 from carts.views import merge_cart
-from orders.models import Order
+from orders.models import Order, OrderProduct, StatusProduct
 from .form import RegisterForm, UserUpdateForm, ProfileUpdateForm
 from .models import Account
 
@@ -101,7 +101,10 @@ class CustomPasswordResetConfirmView(PasswordResetConfirmView):
 
 @login_required(login_url='login')
 def dashboard(request):
-    return render(request, 'accounts/dashboard.html')
+    order = Order.objects.filter(user=request.user, status='Completed').order_by('-cerated_at').first()
+    recent_orders = OrderProduct.objects.filter(order=order)[:4]
+    context = {'recent_orders': recent_orders}
+    return render(request, 'accounts/dashboard.html', context)
 
 
 @login_required(login_url='login')
