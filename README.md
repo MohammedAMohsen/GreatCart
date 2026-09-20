@@ -238,9 +238,9 @@ GreatCart/
 ## 1. Clone Repository
 
 ```bash
-git clone https://github.com/yourusername/greatCart.git
+git clone https://github.com/MohammedAMohsen/GreatCart.git
 
-cd greatCart
+cd GreatCart
 ```
 
 ---
