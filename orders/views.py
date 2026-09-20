@@ -87,6 +87,7 @@ def payment_page(request, order_number):
     return render(request, 'orders/payments.html', context)
 
 
+@login_required(login_url='login')
 def payments(request):
     if request.method != 'POST':
         return JsonResponse({'message':'Invalid request'}, status=405)

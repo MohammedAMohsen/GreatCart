@@ -48,6 +48,7 @@ class Variation(models.Model):
     created_date = models.DateTimeField(auto_now_add=True)
 
     objects = VariationManager()
+    # objects = VariationQuerySet.as_manager() # Django افضل حسب المعايير السليمة ل 
 
     def __str__(self):
         return self.variation_value
